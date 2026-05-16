@@ -55,25 +55,27 @@ const finishMovement = () => {
 }
 
 const getMovementDirection = () => {
-    if (movement.initialField.x === movement.endingField.x) return 'vertical';
-    if (movement.initialField.y === movement.endingField.y) return 'horizontal';
+    let direction = '';
+    if (movement.initialField.x === movement.endingField.x) direction = 'vertical';
+    if (movement.initialField.y === movement.endingField.y) direction = 'horizontal';
 
     const deltaX = Math.abs(movement.endingField.x - movement.initialField.x);
     const deltaY = Math.abs(movement.endingField.y - movement.initialField.y);
-    if (deltaX === deltaY) {
-        let direction = 'diagonal';
-        direction += (movement.initialField.x < movement.endingField.x) ? 'L' : 'R';
-        direction += (movement.initialField.y < movement.endingField.y) ? 'B' : 'T';
-        return direction;
-    }
+    if (deltaX === deltaY) direction = 'diagonal';
+    
+    let dirLetter = '';
+    if (['horizontal', 'diagonal'].includes(direction)) 
+        dirLetter += (movement.initialField.x < movement.endingField.x) ? 'L' : 'R';
+    if (['vertical', 'diagonal'].includes(direction))
+        dirLetter += (movement.initialField.y < movement.endingField.y) ? 'B' : 'T';
 
-    return false;
+    return direction + dirLetter;
 }
 
 const getWordCreated = () => {
-    if (movement.direction === 'horizontal') return getHorizontalWord();
-    if (movement.direction === 'vertical') return getVerticalWord();
-    if (movement.direction .startsWith('diagonal')) return getDiagonalWord();
+    if (movement.direction.startsWith('horizontal')) return getHorizontalWord();
+    if (movement.direction.startsWith('vertical')) return getVerticalWord();
+    if (movement.direction.startsWith('diagonal')) return getDiagonalWord();
 }
 
 const getHorizontalWord = () => {
@@ -142,13 +144,44 @@ const drawLine = () => {
     movement.line.style.backgroundColor = lineColors[Math.floor(Math.random() * lineColors.length)];
 
     const initialFieldElement = sel('.letter[data-x="' + movement.initialField.x + '"][data-y="' + movement.initialField.y + '"]');
-    initialFieldElement.appendChild(movement.line);
-    stretchLine()
+    initialFieldElement.appendChild(movement.line);        
 }
 
 const stretchLine = () => {
-    if (!movement.line) return;
-    // TODO:
+    let step = ''
+    if (movement.direction.startsWith('horizontal'))
+        step = 100;
+    else if (movement.direction.startsWith('vertical'))
+        step = 77.56;
+    else if (movement.direction.startsWith('diagonal'))
+        step = 124.2;
+
+    const width = 80 + ((word.length - 1) * step);
+    movement.line.style.width = width + '%';
+
+    console.log(movement.direction);
+
+    movement.line.style.transformOrigin = level.transformOriginX + ' center'; // reset rotation
+
+    if (movement.direction === 'horizontalL')
+        movement.line.style.transform = 'rotate(0deg)';
+    else if (movement.direction === 'horizontalR')
+        movement.line.style.transform = 'rotate(180deg)'; 
+
+    else if (movement.direction === 'verticalT')
+        movement.line.style.transform = 'rotate(-90deg)';
+    else if (movement.direction === 'verticalB')
+        movement.line.style.transform = 'rotate(90deg)';
+
+    else if (movement.direction === 'diagonalRT')
+        movement.line.style.transform = 'rotate(-143.3deg)';
+    else if (movement.direction === 'diagonalRB')
+        movement.line.style.transform = 'rotate(143.3deg)';
+
+    else if (movement.direction === 'diagonalLT')
+        movement.line.style.transform = 'rotate(-36.7deg)';
+    else if (movement.direction === 'diagonalLB')
+        movement.line.style.transform = 'rotate(36.7deg)';
 }
 
 
@@ -178,8 +211,10 @@ globalEventListener('mouseover', '.field', e => {
     movement.direction = getMovementDirection();
     if (!movement.direction) return;
 
-    const word = getWordCreated();
+    word = getWordCreated();
     sel('.word').textContent = word;
+
+    stretchLine();
 });
 
 document.addEventListener('mouseup', e => finishMovement());
@@ -206,25 +241,29 @@ const levels = {
     beginner: {
         name: 'beginner',
         columns: 5,
-        rows: 8
+        rows: 8,
+        transformOriginX: '3rem'
     },
 
     easy: {
         name: 'easy',
         columns: 7,
-        rows: 11
+        rows: 11,
+        transformOriginX: '2rem'
     },
 
     medium: {
         name: 'medium',
         columns: 9,
-        rows: 15
+        rows: 15,
+        transformOriginX: '1.65rem'
     },
 
     advanced: {
         name: 'advanced',
         columns: 10,
-        rows: 16
+        rows: 16,
+        transformOriginX: '1.5rem'
     }
 }
 
@@ -238,6 +277,8 @@ const lineColors = [
 ];
 
 let isClicked = false;
+let level = null;
+let word = '';
 
 
 
@@ -246,7 +287,7 @@ let isClicked = false;
  ---------------------------------*/
 
 (() => {
-    let chosenLevel = 'advanced';
-    let level = levels[chosenLevel];
+    let chosenLevel = 'beginner';
+    level = levels[chosenLevel];
     buildGameTable(level);
 })()
