@@ -1,6 +1,6 @@
-/*---------------------------------
-           COMMON FUNCTIONS
- ---------------------------------*/
+/*---------------------------------*/
+/*        COMMON FUNCTIONS         */
+/*---------------------------------*/
 const sel = s => document.querySelector(s);
 const create = e => document.createElement(e);
 const globalEventListener = (type, selector, callback) => {
@@ -11,9 +11,9 @@ const globalEventListener = (type, selector, callback) => {
 
 
 
-/*---------------------------------
-              FUNCTIONS
- ---------------------------------*/
+/*---------------------------------*/
+/*            FUNCTIONS            */
+/*---------------------------------*/
 
 const buildGameTable = (level) => {
     sel('.letters-fields').classList.remove('begginer', 'easy', 'medium', 'advanced');
@@ -29,9 +29,9 @@ const buildGameTable = (level) => {
         for (let j = 1; j <= level.columns; j++) {
             let letter = create('div');
             letter.classList.add('letter');
-            letter.textContent = String.fromCharCode(65 + Math.floor(Math.random() * 26));
             letter.dataset.x = j;
             letter.dataset.y = i;
+            letter.textContent = String.fromCharCode(65 + Math.floor(Math.random() * 26));
             lettersDiv.appendChild(letter);
 
             let field = create('div');
@@ -136,11 +136,18 @@ const getDiagonalWord = () => {
 const drawLine = () => {
     movement.line = create('div');
     movement.line.classList.add('line');
-    movement.line.style.backgroundColor = lineColors[Math.floor(Math.random() * lineColors.length)];
+    movement.line.style.zIndex = line_Z_index++;
+    movement.line.style.backgroundColor = getLineBgColor();
 
-    const initialFieldElement = sel('.letter[data-x="' + movement.initialField.x + '"][data-y="' + movement.initialField.y + '"]');
+    const initialFieldElement = sel('.field[data-x="' + movement.initialField.x + '"][data-y="' + movement.initialField.y + '"]');
+    console.log(initialFieldElement);
     initialFieldElement.appendChild(movement.line);
 }
+
+const getLineBgColor = () => {
+    if (BGColorIndex >= lineColors.length) BGColorIndex = 0;
+    return lineColors[BGColorIndex++];
+};
 
 const stretchLine = () => {
     let step = ''
@@ -153,17 +160,19 @@ const stretchLine = () => {
 
     const width = 80 + ((word.length - 1) * step);
     movement.line.style.width = width + '%';
-
-    movement.line.classList.remove('horizontalL', 'horizontalR', 'verticalT', 'verticalB', 'diagonalLT', 'diagonalLB', 'diagonalRT', 'diagonalRB');
-    movement.line.classList.add(movement.direction);
+   
+    if (!movement.line.classList.contains(movement.direction)) {
+        movement.line.classList.remove('horizontalL', 'horizontalR', 'verticalT', 'verticalB', 'diagonalLT', 'diagonalLB', 'diagonalRT', 'diagonalRB');
+        movement.line.classList.add(movement.direction);
+    }
 }
 
 
 
-/*---------------------------------
-            EVENT LISTENERS
- ---------------------------------*/
-globalEventListener('mousedown', '.field', e => {
+/*---------------------------------*/
+/*         EVENT LISTENERS         */
+/*---------------------------------*/
+globalEventListener('mousedown', '.letter', e => {
     movement.initialField.x = Number(e.target.dataset.x);
     movement.initialField.y = Number(e.target.dataset.y);
 
@@ -176,7 +185,7 @@ globalEventListener('mousedown', '.field', e => {
     drawLine();
 });
 
-globalEventListener('mouseover', '.field', e => {
+globalEventListener('mouseover', '.letter', e => {
     if (!isClicked) return;
 
     movement.endingField.x = Number(e.target.dataset.x);
@@ -195,10 +204,16 @@ document.addEventListener('mouseup', e => finishMovement());
 
 
 
-/*-----------------------------------
-                VARIABLES
- -----------------------------------*/
-const movement = {
+/*----------------------------------*/
+/*             VARIABLES            */
+/*----------------------------------*/
+let isClicked = false;
+let level = null;
+let word = '';
+let line_Z_index = 0;
+let BGColorIndex = 0;
+
+ const movement = {
     initialField: {
         x: null,
         y: null
@@ -243,26 +258,22 @@ const levels = {
 }
 
 const lineColors = [
-    '#00b7ff79',
-    '#ff000079',
-    '#00ff0079',
-    '#ff00ff79',
-    '#ffff0079',
-    '#00ffff79'
+    '#00b7ffaa',
+    '#991b1baa',
+    '#146614aa',
+    '#b22fb2aa',
+    '#c6c600aa',
+    '#32b6b6aa'
 ];
 
-let isClicked = false;
-let level = null;
-let word = '';
 
 
-
-/*---------------------------------
-                MAIN
- ---------------------------------*/
+/*----------------------------------*/
+/*               MAIN               */
+/*----------------------------------*/
 
 (() => {
-    let chosenLevel = 'advanced';
+    let chosenLevel = 'advanced'; 
     level = levels[chosenLevel];
     buildGameTable(level);
 })()
