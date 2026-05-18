@@ -16,19 +16,14 @@ const globalEventListener = (type, selector, callback) => {
  ---------------------------------*/
 
 const buildGameTable = (level) => {
-    console.log(level);
+    sel('.letters-fields').classList.remove('begginer', 'easy', 'medium', 'advanced');
+    sel('.letters-fields').classList.add(level.name);
 
     const lettersDiv = sel('.letters');
     const fieldsDiv = sel('.fields');
 
     lettersDiv.innerHTML = '';
     fieldsDiv.innerHTML = '';
-
-    lettersDiv.style.gridTemplateColumns = `repeat(${level.columns}, 1fr)`;
-    lettersDiv.style.gridTemplateRows = `repeat(${level.rows}, 1fr)`;
-
-    fieldsDiv.style.gridTemplateColumns = `repeat(${level.columns}, 1fr)`;
-    fieldsDiv.style.gridTemplateRows = `repeat(${level.rows}, 1fr)`;
 
     for (let i = 1; i <= level.rows; i++) {
         for (let j = 1; j <= level.columns; j++) {
@@ -152,26 +147,15 @@ const stretchLine = () => {
     if (movement.direction.startsWith('horizontal'))
         step = 100;
     else if (movement.direction.startsWith('vertical'))
-        step = level.rotate[`verticalStep`];
+        step = level[`verticalStep`];
     else if (movement.direction.startsWith('diagonal'))
-        step = level.rotate[`diagonalStep`];
+        step = level[`diagonalStep`];
 
     const width = 80 + ((word.length - 1) * step);
     movement.line.style.width = width + '%';
-    movement.line.style.transformOrigin = level.rotate.transformOriginX + ' center'; // reset rotation
 
-    switch (movement.direction) {
-        case 'horizontalL':
-            movement.line.style.transform = 'rotate(0deg)'; break;
-        case 'horizontalR':
-            movement.line.style.transform = 'rotate(180deg)'; break;
-        case 'verticalT':
-            movement.line.style.transform = 'rotate(-90deg)'; break;
-        case 'verticalB':
-            movement.line.style.transform = 'rotate(90deg)'; break;
-        default:
-            movement.line.style.transform = `rotate(${level.rotate[movement.direction]}deg)`;
-    }
+    movement.line.classList.remove('horizontalL', 'horizontalR', 'verticalT', 'verticalB', 'diagonalLT', 'diagonalLB', 'diagonalRT', 'diagonalRB');
+    movement.line.classList.add(movement.direction);
 }
 
 
@@ -232,60 +216,29 @@ const levels = {
         name: 'beginner',
         columns: 5,
         rows: 8,
-        rotate: {
-            transformOriginX: '3rem',
-            diagonalStep: 126,
-            verticalStep: 77.56,
-            diagonalLT: -37.8,
-            diagonalLB: 37.8,
-            diagonalRT: -142.2,
-            diagonalRB: 142.2
-        }
+        diagonalStep: 126,
+        verticalStep: 77.56
     },
-
     easy: {
         name: 'easy',
         columns: 7,
         rows: 11,
-        rotate: {
-            transformOriginX: '2.15rem',
-            diagonalStep: 127.56,
-            verticalStep: 79.1,            
-            diagonalLT: -38.5,
-            diagonalRT: -141.6,
-            diagonalLB: 38.5,
-            diagonalRB: 141.6
-        }
+        diagonalStep: 127.56,
+        verticalStep: 79.1
     },
-
     medium: {
         name: 'medium',
         columns: 9,
         rows: 15,
-        rotate: {
-            verticalStep: 74.5,
-            diagonalStep: 125,
-            transformOriginX: '1.7rem',
-            diagonalLT: -36.7,
-            diagonalRT: -143.2,
-            diagonalLB: 36.7,
-            diagonalRB: 143.3
-        }
+        diagonalStep: 125,
+        verticalStep: 74.5
     },
-
     advanced: {
         name: 'advanced',
         columns: 10,
         rows: 16,
-        rotate: {
-            verticalStep: 77.6,
-            diagonalStep: 126.5,
-            transformOriginX: '1.52rem',
-            diagonalLT: -37.8,
-            diagonalRT: -142.2,
-            diagonalLB: 37.8,
-            diagonalRB: 142.2
-        }
+        diagonalStep: 126.5,
+        verticalStep: 77.6
     }
 }
 
@@ -309,7 +262,7 @@ let word = '';
  ---------------------------------*/
 
 (() => {
-    let chosenLevel = 'beginner';
+    let chosenLevel = 'advanced';
     level = levels[chosenLevel];
     buildGameTable(level);
 })()

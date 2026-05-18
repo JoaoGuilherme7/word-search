@@ -1,0 +1,151 @@
+/* ------------------------ */
+/*      LINE ROTATION       */
+/* ------------------------ */
+.beginner .letter{
+    font-size: 2.5rem;
+}
+
+.easy .letter{
+    font-size: 2rem;
+}
+
+.medium .letter{
+    font-size: 1.8rem;
+}
+
+.advanced .letter{
+    font-size: 1.6rem;
+}
+
+
+/* ------------------------ */
+/*    GRID ROWS/COLUMNS     */
+/* ------------------------ */
+
+.beginner .letters,
+.beginner .fields{
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+}
+
+.easy .letters,
+.easy .fields{
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(11, 1fr);
+}
+
+.medium .letters,
+.medium .fields{
+    grid-template-columns: repeat(9, 1fr);
+    grid-template-rows: repeat(15, 1fr);
+}
+
+.advanced .letters,
+.advanced .fields{
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(16, 1fr);
+}
+
+
+
+/* ------------------------ */
+/*      LINE ROTATION       */
+/* ------------------------ */
+
+.line{
+    &.horizontalL{
+        transform: rotate(0deg);
+    }
+
+    &.horizontalR{
+        transform: rotate(180deg);
+    }
+
+    &.verticalT{
+        transform: rotate(-90deg);
+    }
+
+    &.verticalB{
+        transform: rotate(90deg);
+    }
+}
+
+.beginner .line{
+    transform-origin: 3.0rem center;    
+
+    &.diagonalLT{
+        transform: rotate(-37.8deg);        
+    }
+
+    &.diagonalLB{
+        transform: rotate(37.8deg);        
+    }
+
+    &.diagonalRT{
+        transform: rotate(-142.2deg);
+    }
+
+    &.diagonalRB{
+        transform: rotate(142.2deg);
+    }
+}
+
+.easy .line{
+    transform-origin: 2.15rem center;
+
+    &.diagonalLT{
+        transform: rotate(-38.5deg);        
+    }
+
+    &.diagonalLB{
+        transform: rotate(38.5deg);        
+    }
+
+    &.diagonalRT{
+        transform: rotate(-141.6deg);
+    }
+
+    &.diagonalRB{
+        transform: rotate(141.6deg);
+    }
+}
+
+.medium .line{
+    transform-origin: 1.7rem center;
+
+    &.diagonalLT{
+        transform: rotate(-36.7deg);        
+    }
+
+    &.diagonalLB{
+        transform: rotate(36.7deg);        
+    }
+
+    &.diagonalRT{
+        transform: rotate(-143.2deg);
+    }
+
+    &.diagonalRB{
+        transform: rotate(143.3deg);
+    }
+}
+
+.advanced .line{
+    transform-origin: 1.52rem center;
+
+    &.diagonalLT{
+        transform: rotate(-37.8deg);        
+    }
+
+    &.diagonalLB{
+        transform: rotate(37.8deg);        
+    }
+
+    &.diagonalRT{
+        transform: rotate(-142.2deg);
+    }
+
+    &.diagonalRB{
+        transform: rotate(142.2deg);
+    }
+}

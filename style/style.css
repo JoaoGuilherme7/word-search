@@ -86,7 +86,6 @@ div.fields {
 .field{
     border-radius: 10.0rem;
     display: flex;
-    /* justify-content: center; */
     align-items: center;
 }
 
