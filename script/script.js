@@ -62,9 +62,9 @@ const getMovementDirection = () => {
     const deltaX = Math.abs(movement.endingField.x - movement.initialField.x);
     const deltaY = Math.abs(movement.endingField.y - movement.initialField.y);
     if (deltaX === deltaY) direction = 'diagonal';
-    
+
     let dirLetter = '';
-    if (['horizontal', 'diagonal'].includes(direction)) 
+    if (['horizontal', 'diagonal'].includes(direction))
         dirLetter += (movement.initialField.x < movement.endingField.x) ? 'L' : 'R';
     if (['vertical', 'diagonal'].includes(direction))
         dirLetter += (movement.initialField.y < movement.endingField.y) ? 'B' : 'T';
@@ -144,7 +144,7 @@ const drawLine = () => {
     movement.line.style.backgroundColor = lineColors[Math.floor(Math.random() * lineColors.length)];
 
     const initialFieldElement = sel('.letter[data-x="' + movement.initialField.x + '"][data-y="' + movement.initialField.y + '"]');
-    initialFieldElement.appendChild(movement.line);        
+    initialFieldElement.appendChild(movement.line);
 }
 
 const stretchLine = () => {
@@ -152,36 +152,26 @@ const stretchLine = () => {
     if (movement.direction.startsWith('horizontal'))
         step = 100;
     else if (movement.direction.startsWith('vertical'))
-        step = 77.56;
+        step = level.rotate[`verticalStep`];
     else if (movement.direction.startsWith('diagonal'))
-        step = 124.2;
+        step = level.rotate[`diagonalStep`];
 
     const width = 80 + ((word.length - 1) * step);
     movement.line.style.width = width + '%';
+    movement.line.style.transformOrigin = level.rotate.transformOriginX + ' center'; // reset rotation
 
-    console.log(movement.direction);
-
-    movement.line.style.transformOrigin = level.transformOriginX + ' center'; // reset rotation
-
-    if (movement.direction === 'horizontalL')
-        movement.line.style.transform = 'rotate(0deg)';
-    else if (movement.direction === 'horizontalR')
-        movement.line.style.transform = 'rotate(180deg)'; 
-
-    else if (movement.direction === 'verticalT')
-        movement.line.style.transform = 'rotate(-90deg)';
-    else if (movement.direction === 'verticalB')
-        movement.line.style.transform = 'rotate(90deg)';
-
-    else if (movement.direction === 'diagonalRT')
-        movement.line.style.transform = 'rotate(-143.3deg)';
-    else if (movement.direction === 'diagonalRB')
-        movement.line.style.transform = 'rotate(143.3deg)';
-
-    else if (movement.direction === 'diagonalLT')
-        movement.line.style.transform = 'rotate(-36.7deg)';
-    else if (movement.direction === 'diagonalLB')
-        movement.line.style.transform = 'rotate(36.7deg)';
+    switch (movement.direction) {
+        case 'horizontalL':
+            movement.line.style.transform = 'rotate(0deg)'; break;
+        case 'horizontalR':
+            movement.line.style.transform = 'rotate(180deg)'; break;
+        case 'verticalT':
+            movement.line.style.transform = 'rotate(-90deg)'; break;
+        case 'verticalB':
+            movement.line.style.transform = 'rotate(90deg)'; break;
+        default:
+            movement.line.style.transform = `rotate(${level.rotate[movement.direction]}deg)`;
+    }
 }
 
 
@@ -234,7 +224,7 @@ const movement = {
         y: null
     },
     direction: null,
-    line:null
+    line: null
 }
 
 const levels = {
@@ -242,28 +232,60 @@ const levels = {
         name: 'beginner',
         columns: 5,
         rows: 8,
-        transformOriginX: '3rem'
+        rotate: {
+            transformOriginX: '3rem',
+            diagonalStep: 126,
+            verticalStep: 77.56,
+            diagonalLT: -37.8,
+            diagonalLB: 37.8,
+            diagonalRT: -142.2,
+            diagonalRB: 142.2
+        }
     },
 
     easy: {
         name: 'easy',
         columns: 7,
         rows: 11,
-        transformOriginX: '2rem'
+        rotate: {
+            transformOriginX: '2.15rem',
+            diagonalStep: 127.56,
+            verticalStep: 79.1,            
+            diagonalLT: -38.5,
+            diagonalRT: -141.6,
+            diagonalLB: 38.5,
+            diagonalRB: 141.6
+        }
     },
 
     medium: {
         name: 'medium',
         columns: 9,
         rows: 15,
-        transformOriginX: '1.65rem'
+        rotate: {
+            verticalStep: 74.5,
+            diagonalStep: 125,
+            transformOriginX: '1.7rem',
+            diagonalLT: -36.7,
+            diagonalRT: -143.2,
+            diagonalLB: 36.7,
+            diagonalRB: 143.3
+        }
     },
 
     advanced: {
         name: 'advanced',
         columns: 10,
         rows: 16,
-        transformOriginX: '1.5rem'
+        rotate: {
+            verticalStep: 77.6,
+            diagonalStep: 126.5,
+            transformOriginX: '1.52rem',
+            diagonalLT: -37.8,
+            diagonalRT: -142.2,
+            diagonalLB: 37.8,
+            diagonalRB: 142.2
+        }
     }
 }
 
