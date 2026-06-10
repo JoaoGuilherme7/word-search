@@ -4,14 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" />
     <link rel="stylesheet" href="style/style.css">
     <link rel="stylesheet" href="style/level.css">
     <script src="script/script.js" defer></script>
     <title>Word Search</title>
 </head>
 <body>
-
     <div class="game">
+        <div class="wordDetailsModal">            
+        </div>
+
+        <div class="burguer-time-count">
+            <div class="burguer-menu">
+                <button><i class="fa-solid fa-bars"></i></button>
+            </div>
+            <div class="time">
+                <span class="minutes">00</span>:<span class="seconds">00</span>
+            </div>
+            <div class="counting">
+                <span class="found">0</span>/<span class="total">0</span>
+            </div>
+        </div>
+
         <div class="words">
         </div>
 
@@ -21,7 +36,6 @@
             <div class="fields"></div>
             <div class="letters"></div>
         </div>
-    </div>
-    
+    </div>    
 </body>
 </html>
